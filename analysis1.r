@@ -14,7 +14,6 @@ ggplot(data = datasetScore, mapping = aes(x=MatchTime, y=hometeamCurrentScore)) 
   geom_smooth(se=T)
 
 #Proportion de chaque action
-
 dsAction <- data.frame(dataset["action"], dataset["actionName"], dataset["MatchTime"])
 dsActionCount <- dsAction %>% group_by(actionName) %>% tally(sort=TRUE) 
 dsActionProp <- data.frame(dsActionCount, dsActionCount["n"] / colSums(dsActionCount["n"]))
@@ -24,7 +23,7 @@ ggplot(data = dsActionProp) +
   geom_bar(mapping = aes(x=1, fill=actionName)) + 
   coord_polar(theta="y")
 
-#Localisation des passes en fonction de l"équipe
+#Localisation des passes en fonction de l'équipe
 dsPass <- subset(dataset, subset = actionName == "Pass")
 View(dsPass)
 
