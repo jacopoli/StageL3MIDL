@@ -18,7 +18,7 @@ dsAction <- data.frame(dataset["action"], dataset["actionName"], dataset["MatchT
 dsActionCount <- dsAction %>% group_by(actionName) %>% tally(sort=TRUE) 
 dsActionProp <- data.frame(dsActionCount, dsActionCount["n"] / colSums(dsActionCount["n"]))
 names(dsActionProp) <- c("actionName", "occ", "prop")
-
+View(dsActionCount)
 ggplot(data = dsActionProp) +
   geom_bar(mapping = aes(x=1, fill=actionName)) + 
   coord_polar(theta="y")
