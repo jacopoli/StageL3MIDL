@@ -79,6 +79,21 @@ for (l in 1:nrow(ds_final)){
 
 #on sépare les séquences des deux équipes 
 
+liste_sequences_2300 <- c()
+liste_sequences_2350 <- c()
+i <- 1
+j <- 1
+for (l in 1:nrow(ds_final)){
+  
+  if (ds_final[l, "actionName"] == "Possession" & ds_final[l, "team_id"] == 2300){
+    liste_sequences_2300[i] <- ds_final[l, "sequence_id"]
+    i <- i + 1
+  } else {
+    liste_sequences_2350[j] <- ds_final[l, "sequence_id"]
+    j <- j + 1
+  }
+}
+
 data_2300 <- data.frame(team_id=integer(),
                         ps_timestamp=period(),
                         ps_endstamp=double(),
@@ -110,7 +125,8 @@ for (l in 1:nrow(ds_final)) {
   }
   
 }
-View(data_2300)
-View(data_2350)
+
+
+
 
 
