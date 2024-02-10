@@ -20,7 +20,7 @@ dico_actionNames <- names(sort(dico_actionNames))
 #on filtre les donées pour garder uniquement les colonnes "utiles"
   
 ds_final = data.frame(ds["team_id"], ds["ps_timestamp"],ds["ps_endstamp"], ds["action"], ds["actionName"], ds["sequence_id"])
-unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence")
+unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence", "", "Playmaker Options", "Period", " ")
 ds_final <- subset(ds_final, subset = !(actionName %in% unused_actions ))
 
 #conversion des timestamp en type POSIXct
@@ -95,36 +95,49 @@ for (l in 1:nrow(ds_final)){
 }
 
 data_2300 <- data.frame(team_id=integer(),
-                        ps_timestamp=period(),
-                        ps_endstamp=double(),
-                        action=integer(),
+                        date_posix_start=POSIXct(),
+                        date_posix_end=POSIXct(),
                         actionName=character(),
+                        zoneAction=integer(),
                         sequence_id=integer()
 )
 data_2350 <- data.frame(team_id=integer(),
-                        ps_timestamp=period(),
-                        ps_endstamp=double(),
-                        action=integer(),
+                        date_posix_start=POSIXct(),
+                        date_posix_end=POSIXct(),
                         actionName=character(),
+                        zoneAction=integer(),
                         sequence_id=integer()
 )
 
 for (l in 1:nrow(ds_final)) {
   
   new_row =  list(team_id = ds_final[l, "team_id"], 
-                  ps_timestamp = ds_final[l, "ps_timestamp"], 
-                  ps_endstamp = ds_final[l, "ps_endstamp"],
-                  action = ds_final[l, "action"],
+                  date_posix_start = ds_final[l, "date_posix_start"], 
+                  date_posix_end = ds_final[l, "date_posix_end"],
                   actionName = ds_final[l, "actionName"],
+                  zoneAction = ds_final[l, "zoneAction"],
                   sequence_id = ds_final[l, "sequence_id"]
+                  
   )
   if (ds_final[l, "sequence_id"] %in% liste_sequences_2300) {
-    data_2300 = rbind(data_2300, new_row)
+    data_2300[nrow(data_2300)+1,]<-new_row
+    print(nrow(data_2300))
   } else {
-    data_2350 = rbind(data_2350, new_row)
+    data_2350[nrow(data_2350)+1,]<-new_row
   }
   
 }
+View(data_2300)
+View(data_2350)
+
+# creation des instance activitylog
+data_2300%>%
+dplyr::rename(start="date_posix_start", complete="date_posix_end") %>%
+activitylog(case_id="sequence_id", activity_id="actionName", timestamps =c("start", "complete"), resource_id="team_id") %>%
+  process_map(type_nodes = frequency("absolute"), sec_nodes = frequency("relative"), type_edges = frequency("relative"))
+
+#separation des phases opposition
+
 
 
 
