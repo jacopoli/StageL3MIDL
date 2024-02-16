@@ -10,13 +10,6 @@ ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
 
 DATE_MATCH = "29-04-2023"
 
-#dictionnaire qui nous permet de trouver le nom de l'action à partir de son identifiant
-
-temp <- data.frame(ds["action"], ds["actionName"]) %>% distinct() 
-dico_actionNames <- as.vector(temp)$action
-names(dico_actionNames) <- as.vector(temp)$actionName
-dico_actionNames <- names(sort(dico_actionNames))
-
 #on filtre les donées pour garder uniquement les colonnes "utiles"
   
 ds_final = data.frame(ds["team_id"], ds["ps_timestamp"],ds["ps_endstamp"], ds["action"], ds["actionName"], ds["sequence_id"])

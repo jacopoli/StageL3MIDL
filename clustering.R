@@ -4,88 +4,103 @@ library("dplyr")
 library("bupaverse")
 library("lubridate")
 library("stringr")
+library("stringdist")
+library("DescTools")
+library("PTXQC")
 
 
 setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
 
-merge_rand <- function(str1, str2, com_subseq){
+merge_rand <- function(vec_str, com_subseq){
   
-  split1 <- split_string(str1, com_subseq)
-  split2 <- split_string(str2, com_subseq)
+  splited <- split_string(vec_str, com_subseq)
   
-  lgt_left<-str_length(c(split1[1], split2[1]))
-  lgt_right<-str_length(c(split1[2], split2[2]))
-  
-  delta_left<-lgt_left[1]-lgt_left[2]
-  delta_right<-lgt_right[1]-lgt_right[2]
-  
-  tmp_left<-fill_str(split1[1], split2[1], delta_left)
-  tmp_right<-fill_str(split1[2], split2[2], delta_right, left=FALSE)
-  
-  tmp<-reconstruct(tmp_left, tmp_right, com_subseq)
-  str1<-tmp[1]
-  str2<-tmp[2]
-  
-  output<-choose_letters(str1, str2)
-  output<-str_replace_all(output, " ", "")
+  output<-str_c(splited[1],com_subseq, splited[2])
   
   return(output)
 }
 
-split_string<-function(str1, com_subseq){
-  index<-str_locate(str1, com_subseq)
-  start<-str_sub(str1, end=index[1]-1)
-  end<-str_sub(str1, start=index[2]+1)
+merge_from_subseq <- function(str1, str2, subseq){
+  pos_str1 = get_pos_subseq(str_to_vec(str1), str_to_vec(subseq))
+  pos_str2 = get_pos_subseq(str_to_vec(str2), str_to_vec(subseq))
+  subset_str1<-get_subsets(str1, pos_str1)
+  subset_str2<-get_subsets(str2, pos_str2)
+  tmp<-c()
+  tmp <- StrAlign(c(subset_str1[1], subset_str2[1]), sep="\\r")
+  for (k in 2:(length(subset_str1))){
+    tmp=append(tmp,StrAlign(c(subset_str1[k], subset_str2[k]), sep="\\l"))
+  }
+  output<-c()
+  for (k in 1:(length(tmp)/2)){
+    output=append(output,choose_letters(tmp[2*k-1], tmp[2*k]))
+  }
+  output<-str_replace_all(output, " ", "")
+  output <- paste(output, collapse="")
+  return(output)
+}
+
+get_pos_subseq<- function(str1, subseq){
+  output_pos = c()
+  i=1
+  j=1
+  while (i<=length(str1) && j<=length(subseq)){
+    if (str1[i]==subseq[j]){
+      output_pos[j]=i
+      j=j+1
+    }
+    i=i+1
+  }
+  return(output_pos)
+}
+
+get_diff<-function(str1, str2){
+  return(length(str1)-length(str2))
+}
+
+get_subsets <- function(str1, pos_subseq){
+  output<-c()
+  output[1]<-str_sub(str1, end=pos_subseq[1]-1)
+  for (i in 1:(length(pos_subseq)-1)){
+    output[i+1]<-str_sub(str1, start=pos_subseq[i], end=pos_subseq[i+1]-1)
+  }
+  output[length(pos_subseq)+1]<-str_sub(str1, start=pos_subseq[length(pos_subseq)])
+  return(output)
+}
+
+split_string<-function(vec_str, com_subseq){
+  start<-c()
+  end<-c()
+  index<-str_locate(vec_str, com_subseq)
+  for (i in 1:length(vec_str)){
+    start<-append(start, str_sub(vec_str[i], end=index[i,1]-1))
+    end<-append(end,str_sub(vec_str[i], start=index[i,2]+1))
+  }
+  start<-StrAlign(start, sep="\\r")
+  end<-StrAlign(end, sep="\\l")
+  start<-choose_letters(start)
+  end<-choose_letters(end)
   return(c(start, end))
 }
 
-choose_letters<-function(str1, str2){
-  n<-str_length(str1)
-  res<-rbinom(n, 1, .5)
-  str1_vec<-str_to_vec(str1)
-  str2_vec<-str_to_vec(str2)
+choose_letters<-function(vec_str){
+  n<-length(vec_str)
+  k<-str_length(vec_str[1])
+  res<-sample(x=1:n, size=k, replace=TRUE)
   output<-""
-  for (i in 1:n) {
-    if (res[i]==1){
-      output<-str_c(output, str2_vec[i])
-    }
-    else{
-      output<-str_c(output, str1_vec[i])
-    }
+  for (i in 1:k) {
+      output<-append(output, str_sub(vec_str[res[i]], start=i, end=i))
   }
+  output<-str_replace_all(output, " ", "")
+  output <- paste(output, collapse="")
   return(output)
 }
 
-fill_str <-function(str1, str2, delta, left=TRUE){
-  if(delta<0){
-    str1<-add_blank(str1, -delta, left)
-  }
-  else{
-    str2<-add_blank(str2, delta, left)
-  }
-  return(c(str1, str2))
-}
 
-add_blank<-function(str1, n, left=TRUE){
-  blank<-str_dup(" ", n)
-  if (left){
-     output<-str_c(blank, str1)
-  }
-  else{
-     output<-str_c(str1, blank)
-  }
-  return(output)
-}
-
-reconstruct<-function(left, right, com_subseq){
-  str1<-str_c(left[1], com_subseq, right[1])
-  str2<-str_c(left[2], com_subseq, right[2])
-  return(c(str1, str2))
-}
 
 str_to_vec<-function(str1){
   return(unlist(str_split(str1, "")))
 }
 
-merge_rand("babbabakkko", "akkkio", "kkk")
+merge_rand(c("babbabakkko", "akkkio"), "kkk")
+merge_from_subseq("babbabakkko", "akkkio", "kkk")
