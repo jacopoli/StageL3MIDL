@@ -7,11 +7,8 @@ library("lubridate")
 library("stringr")
 library("PTXQC")
 
-setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
-ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
-
 source("seqToString.R")
-
+}
 # generation de sequences
 {
 sequence_1 <- get_seqsubset(1)

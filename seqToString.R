@@ -6,24 +6,14 @@ library("lubridate")
 library("stringr")
 library("PTXQC")
 
-setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
-ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
-
+source("cleaning.R")
+ds_studied<-data_2300
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_actions <- unlist(ds_final$actionName)
 list_of_actions <- list_of_actions[!duplicated(list_of_actions)]
 list_of_letter <- list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "L", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X")
-#fonction qui renvoie une lettre a une action
-action_to_letter<-function(action){
-  index <- which(list_of_actions == action)
-  return(unlist(list_of_letter[index]))
-}
 
-letter_to_action<-function(letter){
-  index <- which(list_of_letter == letter)
-  return(unlist(list_of_actions[index]))
-}
 
 #fonction qui renvoie une liste des actions de la sequence en parametre
 get_seqsubset <- function(seq){
@@ -57,6 +47,17 @@ str_to_subset <- function(str){
   return(actions)
 }
 
+#fonction qui renvoie une lettre a une action
+action_to_letter<-function(action){
+  index <- which(list_of_actions == action)
+  return(unlist(list_of_letter[index]))
+}
+
+letter_to_action<-function(letter){
+  index <- which(list_of_letter == letter)
+  return(unlist(list_of_actions[index]))
+}
+
 
 
 
@@ -64,9 +65,9 @@ str_to_subset <- function(str){
 list_of_strings <- c()
 for (i in 1:max(ds_final$sequence_id)){
   str_i <- get_seqsubset(i)
-  list_of_strings <- append(list_of_strings, subset_to_str(str_i))
-  
+  if (length(str_i)>0){
+    list_of_strings <- append(list_of_strings, subset_to_str(str_i))
+  }
 }
-
 
 
