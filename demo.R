@@ -7,12 +7,10 @@ library("lubridate")
 library("stringr")
 library("PTXQC")
 
-setwd("/home/sergio/Documents/StageL3MIDL")
-ds <- read.csv("data_rugby.csv", sep=";", dec=".")
+setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
+ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
 
-source("seq_to_lettre.r")
-source("clustering.R")
-}
+source("seqToString.R")
 
 # generation de sequences
 {
@@ -76,4 +74,5 @@ print(str_to_subset(str_merge_13))
 print("--------------------------------------------------------------------------------------------------------------------------")
 print(str_to_subset(str_merge_14))
 }
+
 

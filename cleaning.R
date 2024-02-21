@@ -30,8 +30,6 @@ date_posix <- as.POSIXct(secondes_avec_ms, origin = "1970-01-01", tz = "UTC")
 
 ds_final$date_posix_end <- date_posix
 
-
-View(ds_final)
  
 #ajout colonne position sur le terrain
 
@@ -114,22 +112,13 @@ for (l in 1:nrow(ds_final)) {
   )
   if (ds_final[l, "sequence_id"] %in% liste_sequences_2300) {
     data_2300[nrow(data_2300)+1,]<-new_row
-    print(nrow(data_2300))
   } else {
     data_2350[nrow(data_2350)+1,]<-new_row
   }
   
 }
-View(data_2300)
-View(data_2350)
 
-# creation des instance activitylog
-data_2300%>%
-dplyr::rename(start="date_posix_start", complete="date_posix_end") %>%
-activitylog(case_id="sequence_id", activity_id="actionName", timestamps =c("start", "complete"), resource_id="team_id") %>%
-  process_map(type_nodes = frequency("absolute"), sec_nodes = frequency("relative"), type_edges = frequency("relative"))
 
-#separation des phases opposition
 
 
 

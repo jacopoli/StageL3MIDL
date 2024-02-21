@@ -6,10 +6,8 @@ library("lubridate")
 library("stringr")
 library("PTXQC")
 
-setwd("/home/sergio/Documents/StageL3MIDL")
-ds <- read.csv("data_rugby.csv", sep=";", dec=".")
-
-source("eventlog.R")
+setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
+ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
 
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
@@ -59,6 +57,9 @@ str_to_subset <- function(str){
   return(actions)
 }
 
+
+
+
 #on cree la liste contenant les sequences sous forme de chaine de caracteres
 list_of_strings <- c()
 for (i in 1:max(ds_final$sequence_id)){
@@ -67,11 +68,5 @@ for (i in 1:max(ds_final$sequence_id)){
   
 }
 
-#fonction qui retourne la distance entre deux strings et la substring commune la plus longue
-distance <- function(string1, string2) {
-  seqcom <- LCSn(c(string1, string2))
-  return(c(str_length(seqcom[1]), seqcom))
-}
 
-source("clustering.R")
-merge_rand(a, b, d)  
+
