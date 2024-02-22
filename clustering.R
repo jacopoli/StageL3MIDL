@@ -20,13 +20,15 @@ par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-cluster<-cutree(tree, 5)
+N_CLUSTER = 3
+
+cluster<-cutree(tree, N_CLUSTER)
 df<-tibble(list_of_strings, cluster)
 nodes<-get_nodes(df)
 
 ds_clustered<-tibble(str_to_subset(nodes[1]), rep(1,length(nodes[1])))
 colnames(ds_clustered)<-c("actionName", "sequence")
-for (i in 2:5){
+for (i in 2:N_CLUSTER){
   X<-tibble(str_to_subset(nodes[i]), rep(i,length(nodes[i])))
   colnames(X)<-c("actionName", "sequence")
   ds_clustered<-rbind(ds_clustered, X)

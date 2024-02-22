@@ -8,19 +8,44 @@ library("stringdist")
 library("DescTools")
 library("PTXQC")
 
+#fonction qui merge en fonction du cluster
+get_nodes<-function(df){
+  output<-c()
+  index <- 1
+  cluster_subset <- get_cluster_i(df, index)
+  while (length(cluster_subset)>0){
+    com_seq<-find_LCS(cluster_subset)
+    output<-append(output, merge_strings(cluster_subset, com_seq))
+    index<-index+1
+    cluster_subset <- get_cluster_i(df, index)
+  }
+  return(output)
+}
+
+get_cluster_i<-function(df,i){
+  return(subset(df, subset= (cluster==i))$list_of_strings )
+}
 
 
+#fonction qui retourne la partie commune à toutes les chaines de caractère
+find_LCS <- function(vec_str){
+  return(LCSn(vec_str))
+}
 
-setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
-ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
-
-merge_rand <- function(vec_str, com_subseq){
+#fonction qui fusionne N strings à partir de leur séquence commune
+merge_strings <- function(vec_str, com_subseq){
   
   splited <- split_string(vec_str, com_subseq)
   
   output<-str_c(splited[1],com_subseq, splited[2])
   
   return(output)
+}
+
+#fonction qui retourne la distance entre deux strings et la substring commune la plus longue
+distance <- function(string1, string2) {
+  seqcom <- LCSn(c(string1, string2))
+  return(c(str_length(seqcom[1]), seqcom))
 }
 
 merge_from_subseq <- function(str1, str2, subseq){
@@ -56,9 +81,6 @@ get_pos_subseq<- function(str1, subseq){
   return(output_pos)
 }
 
-get_diff<-function(str1, str2){
-  return(length(str1)-length(str2))
-}
 
 get_subsets <- function(str1, pos_subseq){
   output<-c()
@@ -70,6 +92,7 @@ get_subsets <- function(str1, pos_subseq){
   return(output)
 }
 
+#fonction qui divise tous les mots en 2 sans prendre la partie commune, et qui les fusionne en 1
 split_string<-function(vec_str, com_subseq){
   start<-c()
   end<-c()
@@ -85,6 +108,7 @@ split_string<-function(vec_str, com_subseq){
   return(c(start, end))
 }
 
+#fonction qui forme un mot au hasard à partir des mots entrés
 choose_letters<-function(vec_str){
   n<-length(vec_str)
   k<-str_length(vec_str[1])
@@ -97,8 +121,6 @@ choose_letters<-function(vec_str){
   output <- paste(output, collapse="")
   return(output)
 }
-
-
 
 str_to_vec<-function(str1){
   return(unlist(str_split(str1, "")))

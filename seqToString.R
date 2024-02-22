@@ -10,7 +10,7 @@ source("cleaning.R")
 ds_studied<-data_2300
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
-list_of_actions <- unlist(ds_final$actionName)
+list_of_actions <- unlist(ds_studied$actionName)
 list_of_actions <- list_of_actions[!duplicated(list_of_actions)]
 list_of_letter <- list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "L", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X")
 
@@ -18,9 +18,9 @@ list_of_letter <- list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M
 #fonction qui renvoie une liste des actions de la sequence en parametre
 get_seqsubset <- function(seq){
   actions_of_seq <- c()
-  for (l in 1:nrow(ds_final)){
-    if (ds_final[l, "sequence_id"] == seq){
-      actions_of_seq <- append(actions_of_seq, ds_final[l, "actionName"])
+  for (l in 1:nrow(ds_studied)){
+    if (ds_studied[l, "sequence_id"] == seq){
+      actions_of_seq <- append(actions_of_seq, ds_studied[l, "actionName"])
     }
   }
   return(actions_of_seq)
@@ -63,7 +63,7 @@ letter_to_action<-function(letter){
 
 #on cree la liste contenant les sequences sous forme de chaine de caracteres
 list_of_strings <- c()
-for (i in 1:max(ds_final$sequence_id)){
+for (i in 1:max(ds_studied$sequence_id)){
   str_i <- get_seqsubset(i)
   if (length(str_i)>0){
     list_of_strings <- append(list_of_strings, subset_to_str(str_i))
