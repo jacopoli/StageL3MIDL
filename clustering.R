@@ -8,6 +8,7 @@ library("stringdist")
 library("DescTools")
 library("PTXQC")
 
+setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 source("seqToString.R")
 source("utilsClustering.R")
 
@@ -20,11 +21,12 @@ par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-N_CLUSTER = 3
+N_CLUSTER = 5
 
 cluster<-cutree(tree, N_CLUSTER)
 df<-tibble(list_of_strings, cluster)
 nodes<-get_nodes(df)
+nodes<-get_nodes_mat(df)
 
 ds_clustered<-tibble(str_to_subset(nodes[1]), rep(1,length(nodes[1])))
 colnames(ds_clustered)<-c("actionName", "sequence")

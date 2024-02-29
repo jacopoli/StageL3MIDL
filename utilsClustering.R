@@ -22,6 +22,19 @@ get_nodes<-function(df){
   return(output)
 }
 
+get_nodes_mat<-function(df){
+  output<-c()
+  index <- 1
+  cluster_subset <- get_cluster_i(df, index)
+  while (length(cluster_subset)>0){
+    mat_dist_cluster<-stringdistmatrix(cluster_subset, cluster_subset, method = "lcs")
+    output<-append(output, find_representant(mat_dist_cluster, cluster_subset))
+    index<-index+1
+    cluster_subset <- get_cluster_i(df, index)
+  }
+  return(output)
+}
+
 get_cluster_i<-function(df,i){
   return(subset(df, subset= (cluster==i))$list_of_strings )
 }
@@ -41,6 +54,21 @@ merge_strings <- function(vec_str, com_subseq){
   
   return(output)
 }
+
+find_representant <- function(matrix_dist, vec_str){
+  ranked_dist<-min_rank(rowSums(matrix_dist))
+  variance<-diag(var(matrix_dist))
+  min_var=max(variance)
+  for (i in 1:length(ranked_dist)){
+    if(ranked_dist[i]==1 && min_var>variance[i]) {
+      min_var=variance[i]
+      indice=i
+    }
+  }
+  print(variance[i])
+  return(vec_str[i])
+}
+
 
 #fonction qui retourne la distance entre deux strings et la substring commune la plus longue
 distance <- function(string1, string2) {
