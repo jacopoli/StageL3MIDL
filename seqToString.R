@@ -7,7 +7,7 @@ library("stringr")
 library("PTXQC")
 
 source("cleaning.R")
-ds_studied<-data_2300
+ds_studied<-data_2350
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_actions <- unlist(ds_studied$actionName)
@@ -57,9 +57,6 @@ letter_to_action<-function(letter){
   index <- which(list_of_letter == letter)
   return(unlist(list_of_actions[index]))
 }
-
-
-
 
 #on cree la liste contenant les sequences sous forme de chaine de caracteres
 list_of_strings <- c()

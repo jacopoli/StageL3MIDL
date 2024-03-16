@@ -8,27 +8,20 @@ library("stringdist")
 library("DescTools")
 library("PTXQC")
 
-#fonction qui merge en fonction du cluster
-get_nodes<-function(df){
-  output<-c()
-  index <- 1
-  cluster_subset <- get_cluster_i(df, index)
-  while (length(cluster_subset)>0){
-    com_seq<-find_LCS(cluster_subset)
-    output<-append(output, merge_strings(cluster_subset, com_seq))
-    index<-index+1
-    cluster_subset <- get_cluster_i(df, index)
-  }
-  return(output)
-}
-
 get_nodes_mat<-function(df){
   output<-c()
   index <- 1
   cluster_subset <- get_cluster_i(df, index)
   while (length(cluster_subset)>0){
-    mat_dist_cluster<-stringdistmatrix(cluster_subset, cluster_subset, method = "lcs")
-    output<-append(output, find_representant(mat_dist_cluster, cluster_subset))
+    
+    if (length(cluster_subset)==1){
+      output<-append(output, cluster_subset[1])
+    }
+    else{
+      mat_dist_cluster<-stringdistmatrix(cluster_subset, cluster_subset, method = "lcs")
+      output<-append(output, find_representant(mat_dist_cluster, cluster_subset))
+    }
+    
     index<-index+1
     cluster_subset <- get_cluster_i(df, index)
   }
@@ -37,12 +30,6 @@ get_nodes_mat<-function(df){
 
 get_cluster_i<-function(df,i){
   return(subset(df, subset= (cluster==i))$list_of_strings )
-}
-
-
-#fonction qui retourne la partie commune à toutes les chaines de caractère
-find_LCS <- function(vec_str){
-  return(LCSn(vec_str))
 }
 
 #fonction qui fusionne N strings à partir de leur séquence commune
@@ -55,18 +42,20 @@ merge_strings <- function(vec_str, com_subseq){
   return(output)
 }
 
+#K-medoid function
 find_representant <- function(matrix_dist, vec_str){
-  ranked_dist<-min_rank(rowSums(matrix_dist))
+  line_dist = rowSums(matrix_dist**2)
+  ranked_dist<-min_rank(line_dist)
   variance<-diag(var(matrix_dist))
-  min_var=max(variance)
+  min_var=variance[1]
+  indice=1
   for (i in 1:length(ranked_dist)){
     if(ranked_dist[i]==1 && min_var>variance[i]) {
       min_var=variance[i]
       indice=i
     }
   }
-  print(variance[i])
-  return(vec_str[i])
+  return(vec_str[indice])
 }
 
 
@@ -153,3 +142,6 @@ choose_letters<-function(vec_str){
 str_to_vec<-function(str1){
   return(unlist(str_split(str1, "")))
 }
+
+
+

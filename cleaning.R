@@ -5,7 +5,7 @@ library("bupaverse")
 library("lubridate")
 
 
-setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
+  setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
 
 DATE_MATCH = "29-04-2023"
@@ -13,8 +13,22 @@ DATE_MATCH = "29-04-2023"
 #on filtre les donées pour garder uniquement les colonnes "utiles"
   
 ds_final = data.frame(ds["team_id"], ds["ps_timestamp"],ds["ps_endstamp"], ds["action"], ds["actionName"], ds["sequence_id"])
-unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence", "", "Playmaker Options", "Period", " ")
+unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence", "", "Playmaker Options", "Period", " ", "Collection")
 ds_final <- subset(ds_final, subset = !(actionName %in% unused_actions ))
+
+#on catégorise chaque action selon 3 catégories: O (Offensif), D (Defensif), N (Neutre)
+categories = c("O", "D", "O", "O", "D", "O", "N", "N", "O", "O", "O", "D", "N")
+categories[14]<- "N"
+categories[21]<-"N"
+categories[23]<-"D"
+categories[24]<-"D"
+categories[27]<-"O"
+categories[40]<-"D"
+categories[43]<-"N"
+categories[44]<-"O"
+categories[45]<-"D"
+categories[46]<-"O"
+
 
 #conversion des timestamp en type POSIXct
 
@@ -67,6 +81,12 @@ for (l in 1:nrow(ds_final)){
   if (ds_final[l,"actionName"] == "Possession"){
     n_sequence = n_sequence +1}
 }
+
+ds_final = distinct(ds_final)
+
+#on supprime les actions "Possession" qui ne servent plus
+
+ds_final = subset (ds_final, subset = (actionName != "Possession"))
 
 #on sépare les séquences des deux équipes 
 
