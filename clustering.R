@@ -7,6 +7,7 @@ library("stringr")
 library("stringdist")
 library("DescTools")
 library("PTXQC")
+library("qgraph")
 
 setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 source("seqToString.R")
@@ -14,14 +15,17 @@ source("utilsClustering.R")
 
 matrix<-stringdistmatrix(list_of_strings, list_of_strings, method = "lcs")
 
-tree<-hclust(as.dist(matrix), method="ward.D") 
+#Partie représentation graphique par un force-directed graph
+matrix_qg <-1/matrix
+qgraph(matrix_qg, layout='spring', vsize=3)
 
+tree<-hclust(as.dist(matrix), method="ward.D") 
 dend<-as.dendrogram(tree)
 par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-N_CLUSTER = 4 
+N_CLUSTER = 4
 
 cluster<-cutree(tree, N_CLUSTER)
 df<-tibble(list_of_strings, cluster)

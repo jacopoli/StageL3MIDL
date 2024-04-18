@@ -7,7 +7,13 @@ library("stringr")
 library("PTXQC")
 
 source("cleaning.R")
-ds_studied<-data_2350
+
+#on supprime les actions "Possession" qui ne servent plus
+
+data_2300 = subset (data_2300, subset = (actionName != "Possession"))
+data_2350 = subset (data_2350, subset = (actionName != "Possession"))
+
+ds_studied<-data_2300
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_actions <- unlist(ds_studied$actionName)
