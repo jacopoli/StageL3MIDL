@@ -68,11 +68,9 @@ ds_final$date_posix_end <- date_posix
   while (l %in% 1:nrow(ds_final)){
     
     ds_final[l,"sequence_id"] = n_sequence
-    print(ds_final[l,"actionName"])
     if (ds_final[l,"actionName"] == "Possession"){
       
       temps_fin <- ds_final[l,"ps_endstamp"]
-      print(temps_fin)
       l<-l+1
       
       while (ds_final[l, "ps_endstamp"]<=temps_fin){
@@ -82,6 +80,8 @@ ds_final$date_posix_end <- date_posix
       }
       if (ds_final[l, "actionName"]=="Goal Kick"){
         ds_final[l,"sequence_id"] = n_sequence
+      }else{
+        ds_final[l,"sequence_id"] = n_sequence+1
       }
       n_sequence <- n_sequence +1
     }
@@ -90,7 +90,8 @@ ds_final$date_posix_end <- date_posix
 }
 
 #on catégorise chaque action selon 3 catégories: O (Offensif), D (Defensif), N (Neutre)
-{categories = c("O", "D", "O", "O", "D", "O", "N", "N", "O", "O", "O", "D", "N")
+#on rentre les premières actions à la main 
+{categories = c("O", "D", "O", "N", "D", "O", "N", "N", "O", "O", "O", "D", "N")
   categories[14]<- "N"
   categories[21]<-"N"
   categories[23]<-"D"
@@ -126,45 +127,12 @@ for (l in 1:nrow(ds_final)){
   }
 }
 
-data_2300 <- data.frame(team_id=integer(),
-                        date_posix_start=POSIXct(),
-                        date_posix_end=POSIXct(),
-                        actionName=character(),
-                        zoneAction=integer(),
-                        sequence_id=integer()
-)
-data_2350 <- data.frame(team_id=integer(),
-                        date_posix_start=POSIXct(),
-                        date_posix_end=POSIXct(),
-                        actionName=character(),
-                        zoneAction=integer(),
-                        sequence_id=integer()
-)
-
-for (l in 1:nrow(ds_final)) {
-  
-  new_row =  list(team_id = ds_final[l, "team_id"], 
-                  date_posix_start = ds_final[l, "date_posix_start"], 
-                  date_posix_end = ds_final[l, "date_posix_end"],
-                  actionName = ds_final[l, "actionName"],
-                  zoneAction = ds_final[l, "zoneAction"],
-                  sequence_id = ds_final[l, "sequence_id"]
-                  
-  )
-  if (ds_final[l, "sequence_id"] %in% liste_sequences_2300) {
-    data_2300[nrow(data_2300)+1,]<-new_row
-  } else {
-    data_2350[nrow(data_2350)+1,]<-new_row
-  }
-  
-}
-
 #informations que l'on va utiliser pour la suite 
-data_2300 = distinct(data_2300)
-data_2350 = distinct(data_2350)
+data_2300 = distinct(subset(ds_final, subset = (sequence_id %in% liste_sequences_2300)))
+data_2350 = distinct(subset(ds_final, subset = (sequence_id %in% liste_sequences_2350)))
 
 
-#Isolation des séquences souhaitées"
+#Isolation des séquences souhaitées
 data_2300_restricted <- subset(data_2300, subset=(sequence_id %in% 12:26))
 data_2350_restricted <- subset(data_2350, subset=(sequence_id %in% 12:26))
 

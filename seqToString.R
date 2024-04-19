@@ -10,8 +10,8 @@ source("cleaning.R")
 
 #on supprime les actions "Possession" qui ne servent plus
 
-data_2300 = subset (data_2300, subset = (actionName != "Possession"))
-data_2350 = subset (data_2350, subset = (actionName != "Possession"))
+data_2300 = subset (data_2300, subset = (action != 15))
+data_2350 = subset (data_2350, subset = (action != 15))
 
 ds_studied<-data_2300
 
@@ -72,5 +72,22 @@ for (i in 1:max(ds_studied$sequence_id)){
     list_of_strings <- append(list_of_strings, subset_to_str(str_i))
   }
 }
+
+#donne l'id de la sequence associée
+find_seqId<- function(str) {
+  for (i in 1:length((list_of_strings))) {
+    if (str == list_of_strings[i]) {
+      return(i)
+    }
+  }
+}
+
+str_to_seq <- function(str) {
+  id <- find_seqId(str)
+  seq <- subset(ds_final, subset = (sequence_id==id))
+  return(seq)
+}
+
+
 
 
