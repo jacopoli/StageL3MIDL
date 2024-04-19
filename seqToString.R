@@ -8,12 +8,7 @@ library("PTXQC")
 
 source("cleaning.R")
 
-#on supprime les actions "Possession" qui ne servent plus
-
-data_2300 = subset (data_2300, subset = (action != 15))
-data_2350 = subset (data_2350, subset = (action != 15))
-
-ds_studied<-data_2300
+ds_studied<-data_2300_restricted
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_actions <- unlist(ds_studied$actionName)
@@ -30,6 +25,11 @@ get_seqsubset <- function(seq){
     }
   }
   return(actions_of_seq)
+}
+
+#fonction qui renvoie un vecteur avec les valeurs prises par les sequences
+get_all_id_seq <- function(list_seq){
+  return (as.vector(unique(list_seq$sequence_id)))
 }
 
 #fonction qui renvoie la chaine de caracteres d'une sequence (on applique action_to_letter a chaque action et apres on concatene la lettre a une str)
@@ -69,17 +69,19 @@ list_of_strings <- c()
 for (i in 1:max(ds_studied$sequence_id)){
   str_i <- get_seqsubset(i)
   if (length(str_i)>0){
-    list_of_strings <- append(list_of_strings, subset_to_str(str_i))
+    list_of_strings[i] <-subset_to_str(str_i)
   }
 }
 
 #donne l'id de la sequence associée
 find_seqId<- function(str) {
-  for (i in 1:length((list_of_strings))) {
+  valeurs<-get_all_id_seq(ds_studied)
+  for (i in valeurs) {
     if (str == list_of_strings[i]) {
       return(i)
     }
   }
+  return (-1)
 }
 
 str_to_seq <- function(str) {
@@ -88,6 +90,11 @@ str_to_seq <- function(str) {
   return(seq)
 }
 
+#ZONE TEST
+
+print(list_of_strings)
+all_seq<-get_all_id_seq(ds_studied)
+print(str_to_seq("NDEFGGGGGGMO"))
 
 
 
