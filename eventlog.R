@@ -13,10 +13,6 @@ source("clustering.R")
 
 #on va adapter les datas des clusters 
 
-#création de faux timestamp
-start <- as.POSIXct(c(1:length(ds_clustered$actionName)), origin = "1970-01-01", tz = "UTC")
-complete<-start
-
 ds_clust_format <- tibble(start, complete, ds_clustered)
 ds_clust_format %>% 
   convert_timestamps(columns = c("start", "complete"), format = ymd_hms) %>%
