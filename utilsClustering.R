@@ -8,28 +8,44 @@ library("stringdist")
 library("DescTools")
 library("PTXQC")
 
+
+#retourne la liste des représentant de chaque cluster. En ieme position, le representant du cluster i.
+#entrée: un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
 get_nodes_mat<-function(df){
   output<-c()
   index <- 1
-  cluster_subset <- get_cluster_i(df, index)
-  while (length(cluster_subset)>0){
+  cluster_i <- get_cluster_i(df, index)        #retourne les elements du ieme cluster
+  while (length(cluster_i)>0){
     
-    if (length(cluster_subset)==1){
-      output<-append(output, cluster_subset[1])
+    if (length(cluster_i)==1){                 #si un seul element dans le cluster, c'est le representant
+      output<-append(output, cluster_i[1])
     }
     else{
-      mat_dist_cluster<-stringdistmatrix(cluster_subset, cluster_subset, method = "lcs")
-      output<-append(output, find_representant(mat_dist_cluster, cluster_subset))
+      mat_dist_cluster<-stringdistmatrix(cluster_i, cluster_i, method = "lcs")  #on calcule les distances des elements du cluster UNIQUEMENT
+      output<-append(output, find_representant(mat_dist_cluster, cluster_i))         #on trouve son représentant
     }
     
-    index<-index+1
-    cluster_subset <- get_cluster_i(df, index)
+    index<-index+1                                                     #incrementation de i et recalcul du nouveau cluster
+    cluster_i <- get_cluster_i(df, index)
   }
   return(output)
 }
 
-get_cluster_i<-function(df,i){
-  return(subset(df, subset= (cluster==i))$list_of_strings )
+#retourne les elements du ieme cluster. 
+#entrée: -un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
+#        -l'indice du cluster
+get_cluster_i<-function(df,i){  
+  return(subset(df, subset= (cluster==i))$strings )
+}
+
+
+
+#fonction qui trouve le représentant d'un cluster à partir de la matrice de distance et du vecteur des différents elements
+#on trouve l'element qui a la plus petite distance au carré cumulée.
+find_representant <- function(matrix_dist, vec_str){
+  line_dist = rowSums(matrix_dist**2)
+  ranked_dist<-min_rank(line_dist)
+  return(vec_str[which(ranked_dist==1)])
 }
 
 #fonction qui fusionne N strings à partir de leur séquence commune
@@ -40,22 +56,6 @@ merge_strings <- function(vec_str, com_subseq){
   output<-str_c(splited[1],com_subseq, splited[2])
   
   return(output)
-}
-
-#K-medoid function
-find_representant <- function(matrix_dist, vec_str){
-  line_dist = rowSums(matrix_dist**2)
-  ranked_dist<-min_rank(line_dist)
-  variance<-diag(var(matrix_dist))
-  min_var=variance[1]
-  indice=1
-  for (i in 1:length(ranked_dist)){
-    if(ranked_dist[i]==1 && min_var>variance[i]) {
-      min_var=variance[i]
-      indice=i
-    }
-  }
-  return(vec_str[indice])
 }
 
 
@@ -84,6 +84,7 @@ merge_from_subseq <- function(str1, str2, subseq){
   return(output)
 }
 
+#retourne le 1er indice d'apparition de la sous sequence (subseq) dans str1
 get_pos_subseq<- function(str1, subseq){
   output_pos = c()
   i=1
@@ -98,11 +99,12 @@ get_pos_subseq<- function(str1, subseq){
   return(output_pos)
 }
 
-
+#retourne la chaine str1 divisée 
 get_subsets <- function(str1, pos_subseq){
   output<-c()
   output[1]<-str_sub(str1, end=pos_subseq[1]-1)
   for (i in 1:(length(pos_subseq)-1)){
+    print(output)
     output[i+1]<-str_sub(str1, start=pos_subseq[i], end=pos_subseq[i+1]-1)
   }
   output[length(pos_subseq)+1]<-str_sub(str1, start=pos_subseq[length(pos_subseq)])

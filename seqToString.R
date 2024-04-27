@@ -11,8 +11,8 @@ source("cleaning.R")
 ds_studied<-data_2300_restricted
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
-list_of_actions <- unlist(ds_studied$actionName)
-list_of_actions <- list_of_actions[!duplicated(list_of_actions)]
+list_of_action <- unlist(ds_studied$actionName)
+list_of_action <- list_of_action[!duplicated(list_of_action)]
 list_of_letter <- list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "L", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X")
 
 
@@ -49,13 +49,13 @@ str_to_actions <- function(str){
 
 #fonction qui renvoie une lettre a une action
 action_to_letter<-function(action){
-  index <- which(list_of_actions == action)
+  index <- which(list_of_action == action)
   return(unlist(list_of_letter[index]))
 }
 
 letter_to_action<-function(letter){
   index <- which(list_of_letter == letter)
-  return(unlist(list_of_actions[index]))
+  return(unlist(list_of_action[index]))
 }
 
 
@@ -89,8 +89,8 @@ for (i in ids){
 #ZONE TEST
 
 #print(list_of_strings)
-all_seq<-get_all_id_seq(ds_studied)
-print(str_to_seq("NDEFGGGGGGMO"))
+#all_seq<-get_all_id_seq(ds_studied)
+#print(str_to_seq("NDEFGGGGGGMO"))
  
 
 

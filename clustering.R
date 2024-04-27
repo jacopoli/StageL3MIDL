@@ -13,11 +13,15 @@ setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 source("seqToString.R")
 source("utilsClustering.R")
 
-matrix<-stringdistmatrix(list_of_strings, list_of_strings, method = "lcs")
+#on supprime les valeurs nulles dans list_of_string
+list_of_strings_full <- na.omit(list_of_strings)
+matrix<-stringdistmatrix(list_of_strings_full, list_of_strings_full, method = "lcs")
 
 #Partie représentation graphique par un force-directed graph
-matrix_qg <-1/matrix
+GRAPHE=FALSE
+if (GRAPHE){matrix_qg <-1/matrix
 qgraph(matrix_qg, layout='spring', vsize=3)
+}
 
 tree<-hclust(as.dist(matrix), method="ward.D") 
 dend<-as.dendrogram(tree)
@@ -25,20 +29,11 @@ par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-N_CLUSTER = 10
+N_CLUSTER = 2
 
 cluster<-cutree(tree, N_CLUSTER)
-df<-tibble(list_of_strings, cluster)
-nodes_data<-get_nodes_mat(df)
-nodes<-nodes_data
+df_clustered<-tibble(list_of_strings_full, cluster)
+colnames(df_clustered)<-c("strings", "cluster_n")
+nodes<-get_nodes_mat(df_clustered)
 
-ds_clustered<-
-for (n in nodes){
-  ds_clustered
-}
-colnames(ds_clustered)<-c("actionName", "sequence")
-for (i in 2:N_CLUSTER){
-  X<-tibble(str_to_subset(nodes[i]), rep(i,length(nodes[i])))
-  colnames(X)<-c("actionName", "sequence")
-  ds_clustered<-rbind(ds_clustered, X)
-}
+

@@ -11,11 +11,16 @@ library("PTXQC")
 
 source("clustering.R")
 
-#on va adapter les datas des clusters 
+df_representants <- str_to_seq(nodes[1])
 
-ds_clust_format <- tibble(start, complete, ds_clustered)
-ds_clust_format %>% 
+for (i in 2:N_CLUSTER){
+  df_representants<-rbind(df_representants, str_to_seq(nodes[i]))
+}
+
+colnames(df_representants)[9:10]<-c("start", "complete")
+
+df_representants %>% 
   convert_timestamps(columns = c("start", "complete"), format = ymd_hms) %>%
-  activitylog(case_id = "sequence", activity_id = "actionName", timestamps = c("start", "complete"), resource_id = "sequence")%>%
+  activitylog(case_id = "sequence_id", activity_id = "actionName", timestamps = c("start", "complete"))%>%
   process_map(frequency("relative"))
 
