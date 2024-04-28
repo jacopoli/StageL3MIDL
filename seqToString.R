@@ -63,6 +63,7 @@ letter_to_action<-function(letter){
 find_seqId<- function(str) {
   ids<-get_all_id_seq(ds_studied)
   for (i in ids) {
+    print(i)
     if (str == list_of_strings[i]) {
       return(i)
     }
@@ -90,7 +91,7 @@ for (i in ids){
 
 #print(list_of_strings)
 #all_seq<-get_all_id_seq(ds_studied)
-#print(str_to_seq("NDEFGGGGGGMO"))
+print(str_to_seq("NDEFGGGGGGMO"))
  
 
 

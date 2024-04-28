@@ -11,12 +11,12 @@ library("PTXQC")
 
 #retourne la liste des représentant de chaque cluster. En ieme position, le representant du cluster i.
 #entrée: un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
-get_nodes_mat<-function(df){
+get_representants<-function(df){
   output<-c()
   index <- 1
   cluster_i <- get_cluster_i(df, index)        #retourne les elements du ieme cluster
+  
   while (length(cluster_i)>0){
-    
     if (length(cluster_i)==1){                 #si un seul element dans le cluster, c'est le representant
       output<-append(output, cluster_i[1])
     }

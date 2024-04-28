@@ -4,6 +4,7 @@ setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 get_distance_in_clust<-function(df, index, center){
   output<-c()
   cluster_subset <- get_cluster_i(df, index)
+  print(cluster_subset)
   matrix_dist<-stringdistmatrix(cluster_subset, cluster_subset, method = "lcs")
   clust_dist = rowSums(matrix_dist**2)
   index_center <- which(cluster_subset == center)
@@ -13,11 +14,10 @@ get_distance_in_clust<-function(df, index, center){
 ncluster<-c()
 distcluster<-c()
 
-for (k in 1:10){
+for (k in 1:5){
   cluster<-cutree(tree, k)
-  df<-tibble(list_of_strings, cluster)
-  nodes_data<-get_nodes_mat(df)
-  nodes<-nodes_data
+  df<-tibble(list_of_strings_full, cluster)
+  nodes<-get_representants(df)
   sum_all_clust<-0
   for (i in 1:k){
     sum_all_clust <- sum_all_clust + get_distance_in_clust(df, i, nodes[i])

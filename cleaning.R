@@ -133,8 +133,8 @@ data_2350 = distinct(subset(ds_final, subset = (sequence_id %in% liste_sequences
 
 #on supprime les actions "Possession" qui ne servent plus
 
-data_2300 = subset (data_2300, subset = (action != 15))
-data_2350 = subset (data_2350, subset = (action != 15))
+data_2300 = subset (data_2300, subset = (! action %in% c(15,46)))
+data_2350 = subset (data_2350, subset = (! action %in% c(15,46)))
 
 
 #Isolation des séquences souhaitées
