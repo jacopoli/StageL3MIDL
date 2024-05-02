@@ -14,7 +14,7 @@ DATE_MATCH = "29-04-2023"
   
 ds_final = data.frame(ds["team_id"], ds["ps_timestamp"],ds["ps_endstamp"], ds["action"], ds["actionName"],ds["x_coord"], ds["y_coord"], ds["sequence_id"])
 unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence", "", "Playmaker Options", "Period", " ", "Collection")
-ds_final <- subset(ds_final, subset = !(actionName %in% unused_actions ))
+ds_final <- distinct(subset(ds_final, subset = !(actionName %in% unused_actions ))) #on récupère les actions qui nous intéressent + suppression des doublons
 
 #conversion des timestamp en type POSIXct
 
@@ -127,15 +127,13 @@ for (l in 1:nrow(ds_final)){
   }
 }
 
-#informations que l'on va utiliser pour la suite 
-data_2300 = distinct(subset(ds_final, subset = (sequence_id %in% liste_sequences_2300)))
-data_2350 = distinct(subset(ds_final, subset = (sequence_id %in% liste_sequences_2350)))
-
 #on supprime les actions "Possession" qui ne servent plus
+ds_final_bis = subset (ds_final, subset = (! action %in% c(15,46)))
 
-data_2300 = subset (data_2300, subset = (! action %in% c(15,46)))
-data_2350 = subset (data_2350, subset = (! action %in% c(15,46)))
 
+#informations que l'on va utiliser pour la suite
+data_2300 = subset(ds_final_bis, subset = (sequence_id %in% liste_sequences_2300))
+data_2350 = subset(ds_final_bis, subset = (sequence_id %in% liste_sequences_2350))
 
 #Isolation des séquences souhaitées
 data_2300_restricted <- subset(data_2300, subset=(sequence_id %in% 12:26))

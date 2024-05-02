@@ -8,7 +8,7 @@ library("PTXQC")
 
 source("cleaning.R")
 
-ds_studied<-data_2300_restricted
+ds_studied<-data_2350_restricted
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_action <- unlist(ds_studied$actionName)
@@ -73,7 +73,7 @@ find_seqId<- function(str) {
 
 str_to_seq <- function(str) {
   id <- find_seqId(str)
-  seq <- subset(ds_final, subset = (sequence_id==id))
+  seq <- subset(ds_final_bis, subset = (sequence_id==id))
   return(seq)
 }
 
@@ -91,7 +91,7 @@ for (i in ids){
 
 #print(list_of_strings)
 #all_seq<-get_all_id_seq(ds_studied)
-print(str_to_seq("NDEFGGGGGGMO"))
+#print(str_to_seq("NDEFGGGGGGMO"))
  
 
 

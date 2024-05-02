@@ -104,7 +104,6 @@ get_subsets <- function(str1, pos_subseq){
   output<-c()
   output[1]<-str_sub(str1, end=pos_subseq[1]-1)
   for (i in 1:(length(pos_subseq)-1)){
-    print(output)
     output[i+1]<-str_sub(str1, start=pos_subseq[i], end=pos_subseq[i+1]-1)
   }
   output[length(pos_subseq)+1]<-str_sub(str1, start=pos_subseq[length(pos_subseq)])
