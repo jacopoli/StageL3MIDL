@@ -5,8 +5,8 @@ library("bupaverse")
 library("lubridate")
 
 
-  setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
-ds <- read.csv(".\\data_rugby.csv", sep=";", dec=".")
+setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
+(ds <- read.csv(".\\data_rugby.csv", sep=";", dec="."))
 
 DATE_MATCH = "29-04-2023"
 

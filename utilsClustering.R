@@ -43,8 +43,8 @@ get_cluster_i<-function(df,i){
 #fonction qui trouve le représentant d'un cluster à partir de la matrice de distance et du vecteur des différents elements
 #on trouve l'element qui a la plus petite distance au carré cumulée.
 find_representant <- function(matrix_dist, vec_str){
-  line_dist = rowSums(matrix_dist**2)
-  ranked_dist<-min_rank(line_dist)
+  row_dist = rowSums(matrix_dist**2)
+  ranked_dist<-min_rank(row_dist)
   return(vec_str[which(ranked_dist==1)])
 }
 

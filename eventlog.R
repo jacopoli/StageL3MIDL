@@ -36,3 +36,7 @@ casted_data %>%
 casted_data %>%
   processing_time("activity") %>%
   plot()
+
+casted_data %>%
+  resource_matrix() %>%
+  plot()

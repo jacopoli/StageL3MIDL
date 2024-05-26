@@ -32,7 +32,7 @@ par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-N_CLUSTER = 11
+N_CLUSTER = 3
 
 #récupère les elements annotés de leur cluster + calcul des representants
 cluster<-cutree(tree, N_CLUSTER)

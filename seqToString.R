@@ -8,7 +8,7 @@ library("PTXQC")
 
 source("cleaning.R")
 
-ds_studied<-data_2350_restricted
+ds_studied<-data_2300_restricted
 
 #creation d'une liste avec les differentes actions et une liste de meme taille avec des lettres (a la main mdr)
 list_of_action <- unlist(ds_studied$actionName)
