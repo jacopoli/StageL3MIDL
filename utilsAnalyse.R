@@ -35,7 +35,45 @@ dataset<-data_2300_restricted
   evolPossession<- tibble(possession_2300, possession_2350)
   
   
-  
+#Calcul des distances
+ds<-dataset
+ds_distance = data.frame(ds["ID"], ds["team_id"], 
+                         ds["ps_timestamp"], ds["ps_endstamp"], 
+                         ds["x_coord"], ds["y_coord"], ds["x_coord_end"], ds["y_coord_end"],
+                         ds["actionName"])
+unused_actions = list("Ref Review", "Sub In", "Sub Out", "Sequence", "", "Playmaker Options", "Period", " ")
+ds_distance <- subset(ds_distance, subset = !(actionName %in% unused_actions ))
+
+#View(ds_distance)
+
+ds_distance_possession <- subset(ds_distance, subset = ds_distance$actionName == "Possession")
+#View(ds_distance_possession)
+
+ds_distance_2300 <- subset(ds_distance_possession, subset = ds_distance_possession$team_id == 2300)
+ds_distance_2350 <- subset(ds_distance_possession, subset = ds_distance_possession$team_id == 2350)
+#View(ds_distance_2300)
+
+
+diff_distances_2300 = c()
+diff_distances_2350 = c()
+
+for (l in 1:nrow(ds_distance_2300)){
+  diff = ds_distance_2300[l, "x_coord_end"] - ds_distance_2300[l, "x_coord"]
+  diff_distances_2300 = c(diff_distances_2300, diff)
+}
+
+for (l in 1:nrow(ds_distance_2350)){
+  diff = ds_distance_2350[l, "x_coord_end"] - ds_distance_2350[l, "x_coord"]
+  diff_distances_2350 = c(diff_distances_2350, diff)
+}
+
+
+hist(diff_distances_2300, main = "equipe 2300", xlim = c(-20, 80))
+hist(diff_distances_2350, main = "equipe 2350")
+print(c(mean(diff_distances_2300), sd(diff_distances_2300)))
+print(c(mean(diff_distances_2350), sd(diff_distances_2350)))
+
+View(ds)
   
   
   

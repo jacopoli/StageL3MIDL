@@ -117,13 +117,14 @@ liste_sequences_2350 <- c()
 i <- 1
 j <- 1
 for (l in 1:nrow(ds_final)){
-  
-  if (ds_final[l, "action"] == 15 & ds_final[l, "team_id"] == 2300){
-    liste_sequences_2300[i] <- ds_final[l, "sequence_id"]
-    i <- i + 1
-  } else {
-    liste_sequences_2350[j] <- ds_final[l, "sequence_id"]
-    j <- j + 1
+  if (ds_final[l, "action"] == 15){
+    if ( ds_final[l, "team_id"] == 2300){
+      liste_sequences_2300[i] <- ds_final[l, "sequence_id"]
+      i <- i + 1
+    } else {
+      liste_sequences_2350[j] <- ds_final[l, "sequence_id"]
+      j <- j + 1
+    }
   }
 }
 
