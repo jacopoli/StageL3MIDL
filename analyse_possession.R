@@ -96,10 +96,10 @@ ggplot(data, aes(x=team, y=diff, group=team))+
 
 ### Zone restreinte
 
-data_possession_2300_restricted <- subset(dataPossession, subset=(team_id==2300 & sequence_id %in% 12:26))$diff
-data_possession_2350_restricted <- subset(dataPossession, subset=(team_id==2350 & sequence_id %in% 12:26))$diff
+possession_restricted <- subset(ds_final_restricted, subset=(action ==15))
+possession_restricted$diff <- possession_restricted$ps_endstamp- possession_restricted$ps_timestamp
 
-data<-tibble(dataPossession$team_id, dataPossession$diff)
+data<-tibble(possession_restricted$team_id, possession_restricted$diff)
 colnames(data)<-c("team", "diff")
 ggplot(data, aes(x=team, y=diff, group=team))+
   geom_boxplot()+
