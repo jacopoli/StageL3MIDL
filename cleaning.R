@@ -131,8 +131,9 @@ for (l in 1:nrow(ds_final)){
 #on supprime les actions "Possession" qui ne servent plus
 ds_final_bis = subset (ds_final, subset = (! action %in% c(15,46)))
 
-#on supprime les actions "Possession" qui ne servent plus
+#on isole les sequences
 ds_final_restricted = subset (ds_final, subset = (sequence_id %in% 12:26))
+ds_final_restricted_bis = subset(ds_final_restricted, subset = (! action %in% c(15,46)))
 
 
 #Isolation des sequences en fonction de l'equipe active

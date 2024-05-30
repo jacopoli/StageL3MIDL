@@ -9,24 +9,24 @@ library("DescTools")
 library("PTXQC")
 
 
-#retourne la liste des représentant de chaque cluster. En ieme position, le representant du cluster i.
-#entrée: un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
-get_representants<-function(df){
-  output<-c()
-  index <- 1
-  cluster_i <- get_cluster_i(df, index)        #retourne les elements du ieme cluster
+#retourne la liste des représentant de chaque cluster. 
+#entrée: un dataframe 2 colonnes (les elements et le cluster assigné), N nombre de clusters
+
+get_representants<-function(df, N){
   
-  while (length(cluster_i)>0){
+  colnames(df)<-c("string", "cluster")
+  
+  output<-c() #vecteur pour stocker les representants
+  
+  for (index in 1:N){
+    cluster_i <- get_cluster_i(df,index)
     if (length(cluster_i)==1){                 #si un seul element dans le cluster, c'est le representant
-      output<-append(output, cluster_i[1])
+      output<-append(output, cluster_i[1]) 
     }
     else{
       mat_dist_cluster<-stringdistmatrix(cluster_i, cluster_i, method = "lcs")  #on calcule les distances des elements du cluster UNIQUEMENT
-      output<-append(output, find_representant(mat_dist_cluster, cluster_i))         #on trouve son représentant
+      output<-append(output, find_representant(mat_dist_cluster, cluster_i)) #on trouve son représentant et on l'ajoute
     }
-    
-    index<-index+1                                                     #incrementation de i et recalcul du nouveau cluster
-    cluster_i <- get_cluster_i(df, index)
   }
   return(output)
 }
@@ -34,8 +34,9 @@ get_representants<-function(df){
 #retourne les elements du ieme cluster. 
 #entrée: -un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
 #        -l'indice du cluster
-get_cluster_i<-function(df,i){  
-  return(subset(df, subset= (cluster==i))$strings )
+get_cluster_i<-function(df,k){
+  cluster <- subset(df, subset= (cluster==k))
+  return(cluster$string)
 }
 
 
@@ -45,7 +46,7 @@ get_cluster_i<-function(df,i){
 find_representant <- function(matrix_dist, vec_str){
   row_dist = rowSums(matrix_dist**2)
   ranked_dist<-min_rank(row_dist)
-  return(vec_str[which(ranked_dist==1)])
+  return(vec_str[which(ranked_dist==1)][1])
 }
 
 #fonction qui fusionne N strings à partir de leur séquence commune

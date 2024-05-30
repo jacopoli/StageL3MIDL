@@ -9,7 +9,6 @@ library("DescTools")
 library("PTXQC")
 library("qgraph")
 
-setwd("c:\\Users\\malat\\OneDrive\\Bureau\\S6\\Stage\\StageL3MIDL")
 source("seqToString.R")
 source("utilsClustering.R")
 
@@ -32,12 +31,12 @@ par(mar=c(6.1, 4.1, 4.1, 2.1))
 
 plot(tree)
 
-N_CLUSTER = 3
+N_CLUSTER = 5
 
 #récupère les elements annotés de leur cluster + calcul des representants
 cluster<-cutree(tree, N_CLUSTER)
 df_clustered<-tibble(list_of_strings_full, cluster)
-colnames(df_clustered)<-c("strings", "cluster_n")
-nodes<-get_representants(df_clustered)
+colnames(df_clustered)<-c("string", "cluster")
+nodes<-get_representants(df_clustered, N_CLUSTER)
 
 

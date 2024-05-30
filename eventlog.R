@@ -11,7 +11,7 @@ library("PTXQC")
 
 source("clustering.R")
 
-CLUSTERED_DATA=FALSE #travail avec les données des clusters
+CLUSTERED_DATA=TRUE #travail avec les données des clusters
 
 if (CLUSTERED_DATA){
   
@@ -27,7 +27,7 @@ if (CLUSTERED_DATA){
   activitylog(case_id = "sequence_id", activity_id = "actionName", timestamps = c("start", "complete"), resource_id = "sequence_id")
   
 }else{
-  casted_data<-ds_final #on prend le dataset complet (sans Possession)
+  casted_data<-ds_final_restricted_bis #on prend le dataset complet (sans Possession)
   colnames(casted_data)[9:10]<-c("start","complete")
   casted_data<-convert_timestamps(casted_data, columns = c("start", "complete"), format = ymd_hms)
   casted_data_log<-activitylog(casted_data, case_id = "sequence_id", activity_id = "actionName", timestamps = c("start", "complete"), resource_id = "sequence_id")
@@ -47,7 +47,11 @@ casted_data_log %>%
   plot()
 
 #graphique pour precedence matrix
-
 casted_data_log %>%
-  resource_matrix() %>%
+  process_matrix(frequency("absolute")) %>%
+  plot()
+
+#graphique pour la proportion de chaque action
+casted_data_log %>%
+  activity_presence() %>%
   plot()

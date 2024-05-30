@@ -36,8 +36,9 @@ evolPossession<- tibble( possession_2300, possession_2350, possession_2300+posse
 colnames(evolPossession)<-c("poss_2300", "poss_2350", "total")
 evolPossession$ratio_2300 <- evolPossession$poss_2300/evolPossession$total
 ggplot(evolPossession, aes(x=seq(1,n+1),y=(ratio_2300)))+
-geom_area(fill="grey")+
+geom_area(fill="lightblue")+
 labs(x="Numéro sequence", y="Possession (en %)", title="Possession au cours des sequences")
+
 
 ####################################
 ### Nombre d'actions en fonction de la zone de jeu
@@ -104,4 +105,10 @@ colnames(data)<-c("team", "diff")
 ggplot(data, aes(x=team, y=diff, group=team))+
   geom_boxplot()+
   labs(x="Equipe", y="Durée d'une phase de possession (en sec)", title="Répartition des phases de possession selon l'équipe")
+
+# test moyenne
+poss_2300 <- subset(data, subset=(team == 2300))$diff
+poss_2350 <- subset(data, subset=(team == 2350))$diff
+
+t.test(poss_2300, poss_2350, var.equal = FALSE,alternative = "less") #Donc moyenne significativement plus grande
 
