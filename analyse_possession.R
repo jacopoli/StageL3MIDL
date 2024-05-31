@@ -112,3 +112,10 @@ poss_2350 <- subset(data, subset=(team == 2350))$diff
 
 t.test(poss_2300, poss_2350, var.equal = FALSE,alternative = "less") #Donc moyenne significativement plus grande
 
+
+#######Partie concerant les actions, attente du dossier de Sergio
+
+data<-as.data.frame(table(data_2350$actionName))
+
+ggplot(data, aes(x=Var1, y=Freq))+
+  geom_bar(stat="identity", aes(y=reorder(Var1, Freq), x=Freq))

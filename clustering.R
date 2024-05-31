@@ -26,10 +26,15 @@ qgraph(matrix_qg, layout='spring', vsize=3)
 
 #création de l'arbre
 tree<-hclust(as.dist(matrix), method="ward.D") 
-dend<-as.dendrogram(tree)
-par(mar=c(6.1, 4.1, 4.1, 2.1))
 
-plot(tree)
+
+#Affichage de l'arbre
+PLOT<- FALSE
+if (PLOT){
+  dend<-as.dendrogram(tree)
+  par(mar=c(6.1, 4.1, 4.1, 2.1))
+  plot(tree)
+}
 
 N_CLUSTER = 5
 
@@ -38,5 +43,6 @@ cluster<-cutree(tree, N_CLUSTER)
 df_clustered<-tibble(list_of_strings_full, cluster)
 colnames(df_clustered)<-c("string", "cluster")
 nodes<-get_representants(df_clustered, N_CLUSTER)
+
 
 

@@ -140,9 +140,11 @@ ds_final_restricted_bis = subset(ds_final_restricted, subset = (! action %in% c(
 data_2300 = subset(ds_final_bis, subset = (sequence_id %in% liste_sequences_2300))
 data_2350 = subset(ds_final_bis, subset = (sequence_id %in% liste_sequences_2350))
 
+
 #Isolation des séquences souhaitées
 data_2300_restricted <- subset(data_2300, subset=(sequence_id %in% 12:26))
 data_2350_restricted <- subset(data_2350, subset=(sequence_id %in% 12:26))
+
 
 
 

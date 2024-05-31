@@ -14,8 +14,6 @@ library("PTXQC")
 
 get_representants<-function(df, N){
   
-  colnames(df)<-c("string", "cluster")
-  
   output<-c() #vecteur pour stocker les representants
   
   for (index in 1:N){
@@ -31,12 +29,18 @@ get_representants<-function(df, N){
   return(output)
 }
 
-#retourne les elements du ieme cluster. 
+#retourne les elements du Keme cluster. 
 #entrée: -un dataframe 2 colonnes (les elements | le cluster qui leur est assigné)
 #        -l'indice du cluster
 get_cluster_i<-function(df,k){
+  colnames(df)<-c("string", "cluster")
   cluster <- subset(df, subset= (cluster==k))
   return(cluster$string)
+}
+
+#retourne le nombre d'élément dans le cluster k.
+get_size_cluster<-function(df,k){
+  return(length(get_cluster_i(df,k)))
 }
 
 
