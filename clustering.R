@@ -19,7 +19,7 @@ list_of_strings_full <- na.omit(list_of_strings)
 matrix<-stringdistmatrix(list_of_strings_full, list_of_strings_full, method = "lcs")
 
 #Partie représentation graphique par un force-directed graph
-GRAPHE=FALSE
+GRAPHE=TRUE
 if (GRAPHE){matrix_qg <-1/matrix
 qgraph(matrix_qg, layout='spring', vsize=3)
 }
@@ -44,5 +44,9 @@ df_clustered<-tibble(list_of_strings_full, cluster)
 colnames(df_clustered)<-c("string", "cluster")
 nodes<-get_representants(df_clustered, N_CLUSTER)
 
-
+for (i in 1:5){
+  for (j in 1:5){
+    mat_b[i,j]<-abs(i-j)
+  }
+}
 
